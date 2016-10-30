@@ -49,4 +49,8 @@ public class PlayerScript : MonoBehaviour {
             collisions = 1;
         }
     }
+
+    public void resetPosition() {
+        transform.Translate(new Vector3(1,1,1));
+    }
 }
