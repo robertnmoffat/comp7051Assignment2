@@ -22,6 +22,9 @@ public class ControllerScript : MonoBehaviour {
 
         map[1, 0] = 2;
 
+        map[width - 1, height - 2] = 2;
+        map[width - 2, height - 2] = 2;
+
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
