@@ -9,15 +9,26 @@ public class SkeletonScript : MonoBehaviour {
     private Vector3 moveDirection = Vector3.zero;
     public float rotSpeed = 90; // rotate speed in degrees/second
 
-    
+    public ControllerScript conScript;
+
+    int targetx=1, targetz=1;
+    float threshold = 0.25f;
+    int currentMoveDir = 0;
 
     // Use this for initialization
     void Start () {
-	}
+        Random.InitState((int)System.DateTime.Now.Ticks);
+    }
 	
 	// Update is called once per frame
 	void Update () {
         CharacterController controller = GetComponent<CharacterController>();
+
+        print(Mathf.Abs(transform.position.z - targetz + 0.5f));
+
+        if (Mathf.Abs(transform.position.x - targetx-0.5f) < threshold&&
+            Mathf.Abs(transform.position.z - targetz - 0.5f) < threshold) getNextTargetSpace();
+
 
         if (controller.isGrounded)
         {
@@ -34,13 +45,81 @@ public class SkeletonScript : MonoBehaviour {
         
     }
 
+    //Set rotation to look in the direction the skeleton is going to move
     public void setDirection() {
-        //Quaternion rotation = Quaternion.LookRotation
-        //  (player.transform.position - transform.position, transform.TransformDirection(Vector3.left));
-        //transform.rotation = new Quaternion(rotation.z,0, rotation.w, 0);
-        //transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
-        transform.LookAt(new Vector3(1, transform.position.y, 2));
+        transform.LookAt(new Vector3(targetx + 0.5f, transform.position.y, targetz + 0.5f));
     }
+
     
+    public void getNextTargetSpace() {
+        int dir = currentMoveDir;
+        int turnDir = Random.Range(0,1);
+        //if (start == currentMoveDir) return;
+
+        for (int i=0; i<4; i++) {
+            switch (dir) {
+                case 0:
+                    if (conScript.isFloor(targetx, targetz+1)&&currentMoveDir!=1) {                        
+                        targetz += 1;
+                        currentMoveDir = dir;
+                        dir = 5;
+                        return;
+                    }
+                    break;
+                case 1:
+                    if (conScript.isFloor(targetx, targetz - 1) && currentMoveDir != 0)
+                    {
+                        targetz -= 1;
+                        currentMoveDir = dir;
+                        dir = 5;
+                        return;
+                    }
+                    break;
+                case 2:
+                    if (conScript.isFloor(targetx+1, targetz) && currentMoveDir != 3)
+                    {
+                        targetx += 1;
+                        currentMoveDir = dir;
+                        dir = 5;
+                        return;
+                    }
+                    break;
+                case 3:
+                    if (conScript.isFloor(targetx - 1, targetz) && currentMoveDir != 2)
+                    {
+                        targetx -= 1;
+                        currentMoveDir = dir;
+                        dir = 5;
+                        return;
+                    }
+                    break;
+            }
+
+            if (turnDir == 0)
+            {
+                dir++;
+                if (dir == 4) dir = 0;
+            }
+            else {
+                dir--;
+                if (dir == -1) dir = 3;
+            }
+        }
+
+        switch (currentMoveDir) {
+            case 0:
+                currentMoveDir = 1;
+                return;
+            case 1:
+                currentMoveDir = 0;
+                return;
+            case 2:
+                currentMoveDir = 3;
+                return;
+            case 3:
+                currentMoveDir = 2;
+                return;
+        }
+    }
 
 }

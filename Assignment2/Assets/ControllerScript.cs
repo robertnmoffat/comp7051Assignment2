@@ -145,4 +145,12 @@ public class ControllerScript : MonoBehaviour {
             }
         }
     }
+
+    //check whether a given position on the map is a floor tile
+    public bool isFloor(int xpos, int ypos) {
+        if (xpos <= 0 || xpos >= width - 1) return false;
+        if (ypos <= 0 || ypos >= height - 1) return false;
+        if (map[xpos, ypos] == 2) return true;
+        return false;
+    }
 }
