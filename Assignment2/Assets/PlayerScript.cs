@@ -17,6 +17,10 @@ public class PlayerScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (Application.platform == RuntimePlatform.Android) {
+            getTouchInput();
+        }
+
         if (Input.GetKeyDown("w")) {
             toggleCollisions();
         }
@@ -53,4 +57,19 @@ public class PlayerScript : MonoBehaviour {
     public void resetPosition() {
         transform.Translate(new Vector3(1,1,1));
     }
+
+    public void getTouchInput() {
+        if (Input.touchCount > 0 &&
+       Input.GetTouch(0).phase == TouchPhase.Moved)
+        {
+
+            // Get movement of the finger since last frame
+            Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
+
+            // Move object across XY plane
+            transform.Translate(-touchDeltaPosition.x * speed,
+                        -touchDeltaPosition.y * speed, 0);
+        }
+    }
+
 }
