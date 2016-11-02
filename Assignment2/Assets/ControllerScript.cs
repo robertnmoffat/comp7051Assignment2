@@ -20,11 +20,13 @@ public class ControllerScript : MonoBehaviour {
 
         generateWalls();
 
+        //set entrance of maze to floor
         map[1, 0] = 2;
 
         map[width - 1, height - 2] = 2;
         map[width - 2, height - 2] = 2;
 
+        //build walls and floor in unity corresponding to map values
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
@@ -42,7 +44,7 @@ public class ControllerScript : MonoBehaviour {
 	
 	}
 
-
+    //initialize outer walls and set the rest of the map to 0, neither floor or wall
     public void initializeMap() {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -52,9 +54,9 @@ public class ControllerScript : MonoBehaviour {
                     map[x, y] = 0;
             }
         }
-        //map[0, 1] = 0;
     }
 
+    //Generate maze recursively
     public void generateMaze(int xpos, int ypos, int prevDir) {
         //0=nothing, 1=wall, 2=floor
 

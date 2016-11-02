@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class PlayerScript : MonoBehaviour {
+    public Canvas touchUI;
     public float speed = 6.0F;
     public float jumpSpeed = 8.0F;
     public float gravity = 20.0F;
@@ -9,10 +10,14 @@ public class PlayerScript : MonoBehaviour {
     public float rotSpeed = 90; // rotate speed in degrees/second
     public Camera cam;
     int collisions = 1;
+    bool movingForward = false;
 
     // Use this for initialization
     void Start () {
-        //Physics.IgnoreLayerCollision(0,0,true);
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            touchUI.enabled = true;
+        }
     }
 	
 	// Update is called once per frame
@@ -62,14 +67,34 @@ public class PlayerScript : MonoBehaviour {
         if (Input.touchCount > 0 &&
        Input.GetTouch(0).phase == TouchPhase.Moved)
         {
-
+            
             // Get movement of the finger since last frame
             Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
 
             // Move object across XY plane
-            transform.Translate(-touchDeltaPosition.x * speed,
-                        -touchDeltaPosition.y * speed, 0);
+           // transform.Translate(-touchDeltaPosition.x * speed,
+//-touchDeltaPosition.y * speed, 0);
+
+            transform.Rotate(0, touchDeltaPosition.x * speed/2, 0);
+            
         }
+
+        if (movingForward) {
+            CharacterController controller = GetComponent<CharacterController>();
+            moveDirection = new Vector3(0, 0, 0.25f);
+            moveDirection = transform.TransformDirection(moveDirection);
+            moveDirection *= speed;
+            controller.Move(moveDirection * Time.deltaTime);
+        }
+    }
+
+    //Move player forward
+    public void startMoveForward() {
+        movingForward = true;        
+    }
+
+    public void endMoveForward() {
+        movingForward = false;
     }
 
 }

@@ -5,7 +5,7 @@ public class SkeletonScript : MonoBehaviour {
     public GameObject player;
     public float speed = 6.0F;
     public float jumpSpeed = 8.0F;
-    public float gravity = 20.0F;
+    public float gravity = 0.0F;
     private Vector3 moveDirection = Vector3.zero;
     public float rotSpeed = 90; // rotate speed in degrees/second
 
@@ -50,7 +50,7 @@ public class SkeletonScript : MonoBehaviour {
         transform.LookAt(new Vector3(targetx + 0.5f, transform.position.y, targetz + 0.5f));
     }
 
-    
+    //Find next space which skeleton should move to
     public void getNextTargetSpace() {
         int dir = currentMoveDir;
         int turnDir = Random.Range(0,1);
