@@ -8,7 +8,6 @@ public class PlayerScript : MonoBehaviour {
     public float gravity = 20.0F;
     private Vector3 moveDirection = Vector3.zero;
     public float rotSpeed = 90; // rotate speed in degrees/second
-    public Camera cam;
     int collisions = 1;
     bool movingForward = false;
 
@@ -26,8 +25,21 @@ public class PlayerScript : MonoBehaviour {
             getTouchInput();
         }
 
-        if (Input.GetKeyDown("w")) {
+        if (Input.GetKeyDown("w")|| Input.GetKeyDown("joystick button 3")) {
             toggleCollisions();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Home) || Input.GetKeyDown("joystick button 7"))
+        {
+            resetPosition();
+        }
+
+        if (Input.GetKey(KeyCode.PageUp)) {
+            Camera.main.transform.Rotate(-1, 0, 0);
+        }
+        if (Input.GetKey(KeyCode.PageDown))
+        {
+            Camera.main.transform.Rotate(1, 0, 0);
         }
 
         CharacterController controller = GetComponent<CharacterController>();
@@ -35,10 +47,11 @@ public class PlayerScript : MonoBehaviour {
         {
             transform.Rotate(0, Input.GetAxis("Horizontal") * rotSpeed * Time.deltaTime, 0);
             moveDirection = new Vector3(0, 0, Input.GetAxis("Vertical"));
+            Camera.main.transform.Rotate(Input.GetAxis("ControllerRightStickVert"), 0, 0);
             moveDirection = transform.TransformDirection(moveDirection);
             moveDirection *= speed;
-            if (Input.GetButton("Jump"))
-                moveDirection.y = jumpSpeed;
+            //if (Input.GetButton("Jump"))
+               // moveDirection.y = jumpSpeed;
 
         }
         moveDirection.y -= gravity * Time.deltaTime*collisions;
@@ -60,10 +73,20 @@ public class PlayerScript : MonoBehaviour {
     }
 
     public void resetPosition() {
-        transform.Translate(new Vector3(1,1,1));
+        transform.rotation = Quaternion.identity;
+        transform.position = new Vector3(1.5f, 0.5f, -0.5f);
+        
     }
 
     public void getTouchInput() {
+
+        foreach (Touch touch in Input.touches)
+        {
+            if (touch.tapCount == 2) {
+                resetPosition();
+            }
+        }
+
         if (Input.touchCount > 0 &&
        Input.GetTouch(0).phase == TouchPhase.Moved)
         {
@@ -71,10 +94,11 @@ public class PlayerScript : MonoBehaviour {
             // Get movement of the finger since last frame
             Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
 
-            // Move object across XY plane
-           // transform.Translate(-touchDeltaPosition.x * speed,
-//-touchDeltaPosition.y * speed, 0);
 
+            Camera cam = GetComponent<Camera>();
+
+            //cam.transform.rotate(touchDeltaPosition.y * speed / 2,0,0);
+            Camera.main.transform.Rotate(-touchDeltaPosition.y * speed / 2,0,0);
             transform.Rotate(0, touchDeltaPosition.x * speed/2, 0);
             
         }
