@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class PlayerScript : MonoBehaviour {
     public Canvas touchUI;
     public float speed = 6.0F;
     public float jumpSpeed = 8.0F;
-    public float gravity = 20.0F;
+    public float gravity = 20.0F;    
+
     private Vector3 moveDirection = Vector3.zero;
     public float rotSpeed = 90; // rotate speed in degrees/second
     int collisions = 1;
@@ -23,7 +25,7 @@ public class PlayerScript : MonoBehaviour {
 	void Update () {
         if (Application.platform == RuntimePlatform.Android) {
             getTouchInput();
-        }
+        }        
 
         if (Input.GetKeyDown("w")|| Input.GetKeyDown("joystick button 3")) {
             toggleCollisions();
@@ -119,6 +121,24 @@ public class PlayerScript : MonoBehaviour {
 
     public void endMoveForward() {
         movingForward = false;
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.gameObject.tag == "doorBlock")
+            SceneManager.LoadScene("PongScene");
+
+        //if(hit.gameObject.tag!="Untagged")
+        //print(hit.gameObject.tag);
+    }
+
+    void OnCollisionEnter(Collision col)
+    {
+        print("Start Pong");
+        if (col.gameObject.name == "player")
+        {
+            print("Start Pong");
+        }
     }
 
 }

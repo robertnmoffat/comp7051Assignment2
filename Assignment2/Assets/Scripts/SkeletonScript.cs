@@ -8,6 +8,7 @@ public class SkeletonScript : MonoBehaviour {
     public float gravity = 0.0F;
     private Vector3 moveDirection = Vector3.zero;
     public float rotSpeed = 90; // rotate speed in degrees/second
+    public ControllerScript controllerScript;
 
     public ControllerScript conScript;
 
@@ -24,7 +25,7 @@ public class SkeletonScript : MonoBehaviour {
 	void Update () {
         CharacterController controller = GetComponent<CharacterController>();
 
-        print(Mathf.Abs(transform.position.z - targetz + 0.5f));
+        //print(Mathf.Abs(transform.position.z - targetz + 0.5f));
 
         if (Mathf.Abs(transform.position.x - targetx-0.5f) < threshold&&
             Mathf.Abs(transform.position.z - targetz - 0.5f) < threshold) getNextTargetSpace();
@@ -120,6 +121,10 @@ public class SkeletonScript : MonoBehaviour {
                 currentMoveDir = 2;
                 return;
         }
+    }
+
+    public void addScore(int amount) {
+        controllerScript.addScore(amount);
     }
 
 }

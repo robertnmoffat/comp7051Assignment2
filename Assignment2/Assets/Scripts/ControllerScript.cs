@@ -1,10 +1,17 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class ControllerScript : MonoBehaviour {
     public GameObject wall;
     public GameObject floor;
+    public GameObject door;
     public int width=10, height=10;
+    public GameObject ball;
+    public GameObject player;
+    public Text text;
+
+    int score = 0;
 
     int[,] map;//0=nothing, 1=wall, 2=floor
 
@@ -35,17 +42,31 @@ public class ControllerScript : MonoBehaviour {
                     Instantiate(wall, new Vector3(x, 0, y), transform.rotation);
                 else if (map[x, y] == 2)
                     Instantiate(floor, new Vector3(x, 0, y), transform.rotation);
+                else if (map[x, y] == 3)
+                {
+                    GameObject newDoor = Instantiate(door, new Vector3(x, 0, y), transform.rotation) as GameObject;
+                    
+                    newDoor.tag = "doorBlock";
+                    
+                }
             }
         }
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
-	}
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Vector3 playerpos = player.transform.position;
+            GameObject newBall = (GameObject)Instantiate(ball, new Vector3(playerpos.x, playerpos.y+0.5f, playerpos.z), player.transform.rotation);            
+            ShootBallScript ballscript = newBall.GetComponent<ShootBallScript>();
+            //ballscript.addForce(player.transform.forward*150);
+        }
+    }
 
     //initialize outer walls and set the rest of the map to 0, neither floor or wall
-    public void initializeMap() {
+    public void initializeMap() {        
+
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 if (x == 0 || x == width - 1 || y == 0 || y == height-1)
@@ -54,6 +75,8 @@ public class ControllerScript : MonoBehaviour {
                     map[x, y] = 0;
             }
         }
+
+        map[1, 2] = 3;
     }
 
     //Generate maze recursively
@@ -106,6 +129,7 @@ public class ControllerScript : MonoBehaviour {
         if (!isInRange(xpos,ypos)) return false;//check if position is in range of the map array.
 
         if (map[xpos, ypos] == 1) return false;
+        if (map[xpos, ypos] == 3) return false;
 
         for (int dir=0; dir<4; dir++) {//check every direction to see if it is going to touch an already made path
             if (dir == prevDir) continue;//the direction the path came from is exempt
@@ -154,5 +178,10 @@ public class ControllerScript : MonoBehaviour {
         if (ypos <= 0 || ypos >= height - 1) return false;
         if (map[xpos, ypos] == 2) return true;
         return false;
+    }
+
+    public void addScore(int amount) {
+        score += amount;
+        text.text = "Score: " + score;
     }
 }
