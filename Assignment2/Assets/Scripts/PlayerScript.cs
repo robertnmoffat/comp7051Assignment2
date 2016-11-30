@@ -6,7 +6,8 @@ public class PlayerScript : MonoBehaviour {
     public Canvas touchUI;
     public float speed = 6.0F;
     public float jumpSpeed = 8.0F;
-    public float gravity = 20.0F;    
+    public float gravity = 20.0F;
+    public GameObject canvas;
 
     private Vector3 moveDirection = Vector3.zero;
     public float rotSpeed = 90; // rotate speed in degrees/second
@@ -42,6 +43,14 @@ public class PlayerScript : MonoBehaviour {
         if (Input.GetKey(KeyCode.PageDown))
         {
             Camera.main.transform.Rotate(1, 0, 0);
+        }
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            canvas.SetActive(true);
+        }
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            canvas.SetActive(false);
         }
 
         CharacterController controller = GetComponent<CharacterController>();
