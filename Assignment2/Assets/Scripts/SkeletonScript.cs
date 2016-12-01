@@ -15,6 +15,8 @@ public class SkeletonScript : MonoBehaviour {
     int targetx=1, targetz=1;
     float threshold = 0.25f;
     int currentMoveDir = 0;
+    public GameObject dlight;
+    public AudioClip daySong, nightSong;
 
     // Use this for initialization
     void Start () {
@@ -43,7 +45,20 @@ public class SkeletonScript : MonoBehaviour {
         }
         moveDirection.y -= gravity * Time.deltaTime;
         controller.Move(moveDirection * Time.deltaTime);
-        
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            GetComponent<AudioSource>().Stop();
+            dlight.SetActive(true);
+            GetComponent<AudioSource>().PlayOneShot(daySong);
+        }
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            GetComponent<AudioSource>().Stop();
+            dlight.SetActive(false);
+            GetComponent<AudioSource>().PlayOneShot(nightSong);
+        }
+
     }
 
     //Set rotation to look in the direction the skeleton is going to move

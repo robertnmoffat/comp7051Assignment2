@@ -8,6 +8,8 @@ public class PlayerScript : MonoBehaviour {
     public float jumpSpeed = 8.0F;
     public float gravity = 20.0F;
     public GameObject canvas;
+    public AudioClip walk;
+    public AudioClip ballhit;
 
     private Vector3 moveDirection = Vector3.zero;
     public float rotSpeed = 90; // rotate speed in degrees/second
@@ -20,13 +22,17 @@ public class PlayerScript : MonoBehaviour {
         {
             touchUI.enabled = true;
         }
+        
     }
 	
 	// Update is called once per frame
 	void Update () {
         if (Application.platform == RuntimePlatform.Android) {
             getTouchInput();
-        }        
+        }
+
+        if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && !GetComponent<AudioSource>().isPlaying)
+            GetComponent<AudioSource>().PlayOneShot(walk);
 
         if (Input.GetKeyDown("w")|| Input.GetKeyDown("joystick button 3")) {
             toggleCollisions();
@@ -48,6 +54,7 @@ public class PlayerScript : MonoBehaviour {
         {
             canvas.SetActive(true);
         }
+        
         if (Input.GetKeyDown(KeyCode.X))
         {
             canvas.SetActive(false);
@@ -62,7 +69,9 @@ public class PlayerScript : MonoBehaviour {
             moveDirection = transform.TransformDirection(moveDirection);
             moveDirection *= speed;
             //if (Input.GetButton("Jump"))
-               // moveDirection.y = jumpSpeed;
+            // moveDirection.y = jumpSpeed;
+            
+            //GetComponent<AudioSource>().PlayOneShot(walk);
 
         }
         moveDirection.y -= gravity * Time.deltaTime*collisions;
@@ -139,6 +148,9 @@ public class PlayerScript : MonoBehaviour {
 
         //if(hit.gameObject.tag!="Untagged")
         //print(hit.gameObject.tag);
+        if (hit.gameObject.tag == "wallBlock")
+            GetComponent<AudioSource>().PlayOneShot(ballhit);
+
     }
 
     void OnCollisionEnter(Collision col)

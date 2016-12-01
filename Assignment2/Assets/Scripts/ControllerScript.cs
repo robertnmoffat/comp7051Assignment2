@@ -10,8 +10,9 @@ public class ControllerScript : MonoBehaviour {
     public GameObject ball;
     public GameObject player;
     public Text text;
-
+    public GameObject enemy;
     int score = 0;
+    
 
     int[,] map;//0=nothing, 1=wall, 2=floor
 
@@ -62,6 +63,11 @@ public class ControllerScript : MonoBehaviour {
             ShootBallScript ballscript = newBall.GetComponent<ShootBallScript>();
             //ballscript.addForce(player.transform.forward*150);
         }
+        if (Input.GetKeyDown(KeyCode.O))
+            save();
+        if (Input.GetKeyDown(KeyCode.P))
+            load();
+        
     }
 
     //initialize outer walls and set the rest of the map to 0, neither floor or wall
@@ -183,5 +189,32 @@ public class ControllerScript : MonoBehaviour {
     public void addScore(int amount) {
         score += amount;
         text.text = "Score: " + score;
+    }
+
+    public void save()
+    {
+        PlayerPrefs.SetInt("Score", score);
+        PlayerPrefs.SetFloat("positionx", player.transform.position.x);
+        PlayerPrefs.SetFloat("positiony", player.transform.position.y);
+        PlayerPrefs.SetFloat("positionz", player.transform.position.z);
+        PlayerPrefs.SetFloat("epositionx", enemy.transform.position.x);
+        PlayerPrefs.SetFloat("epositiony", enemy.transform.position.y);
+        PlayerPrefs.SetFloat("epositionz", enemy.transform.position.z);
+    }
+    public void load()
+    {
+
+        score = PlayerPrefs.GetInt("Score");
+        float x = PlayerPrefs.GetFloat("positionx");
+        float y = PlayerPrefs.GetFloat("positiony");
+        float z = PlayerPrefs.GetFloat("positionz");
+        float ex = PlayerPrefs.GetFloat("epositionx");
+        float ey = PlayerPrefs.GetFloat("epositiony");
+        float ez = PlayerPrefs.GetFloat("epositionz");
+
+        addScore(0);
+        player.transform.position = new Vector3(x, y, z);
+
+        enemy.transform.position = new Vector3(ex, ey, ez);
     }
 }

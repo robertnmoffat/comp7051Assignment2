@@ -1,26 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Mute : MonoBehaviour
 {
 
-
-    bool muted;
+    
+    bool muted;    
     public Text mutetext;
 
 
-    // Use this for initialization
+   
     void Start()
-    {
-
+    {      
 
     }
 
-    // Update is called once per frame
+   
     void Update()
     {
-
+       
 
         if (muted)
         {
@@ -33,6 +33,8 @@ public class Mute : MonoBehaviour
             mutetext.text = "Mute";
         }
     }
+
+   
 
     public void Muted()
     {
